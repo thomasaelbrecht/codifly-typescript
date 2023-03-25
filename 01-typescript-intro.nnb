@@ -205,7 +205,14 @@
         {
             "language": "markdown",
             "source": [
-                "## Utility types\n\nTypeScript heeft ook heel wat [utility types](https://www.typescriptlang.org/docs/handbook/utility-types.html). Dit zijn types die je kan gebruiken om andere types te maken. De meest gebruikte utility types zijn:\n\n* `Partial<Type>`: maakt een type optioneel\n* `Omit<Type, Keys>`: verwijdert een of meerdere properties van een type\n* `Record<Keys, Types>`: maakt een type voor een object met properties met naam volgens `Keys` en type volgens `Types`"
+                "## Utility types\n\nTypeScript heeft ook heel wat [utility types](https://www.typescriptlang.org/docs/handbook/utility-types.html). Dit zijn types die je kan gebruiken om andere types te maken. De meest gebruikte utility types zijn:\n\n* `Partial<Type>`: maakt een type optioneel\n* `Omit<Type, Keys>`: verwijdert een of meerdere properties van een type\n* `Record<Keys, Types>`: maakt een type voor een object met properties met naam volgens `Keys` en type volgens `Types`\n* ..."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type MyExample = {\n    a: number;\n    b: string;\n};\n\ntype WithoutB = Omit<MyExample, 'b'>;\ntype OptionalMyExample = Partial<MyExample>;\n\ntype PersonKeys = 'firstName' | 'lastName';\ntype Person = Record<PersonKeys, string>;\n// is gelijk aan:\n// type Person = {\n//     firstName: string;\n//     lastName: string;\n// };"
             ],
             "outputs": []
         }
