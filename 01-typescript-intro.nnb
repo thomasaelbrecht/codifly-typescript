@@ -1,0 +1,213 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# TypeScript\n\nTypeScript is basically JavaScript met types. Het is een superset van JavaScript, wat betekent dat alle JavaScript code ook TypeScript code is. Omgekeerd is dit niet het geval! TypeScript is een programmeertaal die wordt omgezet (niet gecompileerd) naar JavaScript.\n\nOnderstaande functie is dus perfect geldige TypeScript code:\n\n```typescript\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nMet types wordt dit:\n\n```typescript\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n```"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Types\n\nTypeScript kent een aantal basistypes:\n\n* `number`\n* `string`\n* `boolean`\n* `null`\n* `undefined`\n* ...\n\nMet enkel speciale:\n\n* `void`: geeft niets terug (`null` of `undefined` zijn wel weer mogelijk)\n* `any`: eender welke waarde\n* `never`: geeft nooit iets terug\n  * bij `void` kan je nog `return;` doen, bij `never` niet\n  * je ziet dat onderstaand voorbeeld een syntaxfout geeft\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function test(): never {\n  return;\n}"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Er zijn ook enkele types voor de OO-mensen onder ons:\n\n* `class`\n* `interface`\n* `enum`\n* `type`"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Type inference\n\nHet is niet altijd verplicht om elke variabele, functie... te typeren. TypeScript is slim genoeg om het type af te leiden uit de context, dit heet **type inference**. Met het keyword `typeof` kan je het type van een variabele opvragen, maar dat geeft niet altijd nuttige info (zie `f`).\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let a = 1;\nlet b = \"hello\";\nlet c = true;\nlet d = null;\nlet e = undefined;\nlet f = [1, 2, 3];\nlet g = { a: 1, b: 2, c: 3 };\n\nconsole.log('Type of a:', typeof a);\nconsole.log('Type of b:', typeof b);\nconsole.log('Type of c:', typeof c);\nconsole.log('Type of d:', typeof d);\nconsole.log('Type of e:', typeof e);\nconsole.log('Type of f:', typeof f); // eigenlijk is dit number[]\nconsole.log('Type of g:', typeof g); // eigenlijk willen we hier ook een mooier type\n\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Type of a: number",
+                                "Type of b: string",
+                                "Type of c: boolean",
+                                "Type of d: object",
+                                "Type of e: undefined",
+                                "Type of f: object",
+                                "Type of g: object",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Een andere waarde toekennen aan een variabele is ook een vorm van type inference. TypeScript laat hierbij niet toe dat je een waarde toekent die niet overeenkomt met het type van de variabele. Afhankelijk van de instellingen van de compiler zal dit een fout of een waarschuwing geven.\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "a = \"test\";\n\nconsole.log('Type of a:', typeof a);\n\n// Hier lukt het nu wel maar we krijgen wel een warning"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Type of a: string",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Je zou ook types kunnen toekennen aan de variabelen door gebruik te maken van de `:` operator. Dit is niet verplicht, maar kan wel handig zijn om de code leesbaarder te maken."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let getal: number = 1;\nlet tekst: string = \"hello\";\n// ..."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Het is wel mogelijk om een variable meerdere types te laten aannemen. Dit kan door een `|` te gebruiken tussen de types."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let getalOfTekst: number | string = 1;\n\n// en dan later:\ngetalOfTekst = \"hello\";"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[32m'hello'\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Je kan het zelfs nog wat complexer maken:"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let x = [1, \"hello\", null];\n// het type van x is (number | string | null)[]"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "In de documentatie van TypeScript kan je ook lezen dat type inference in de omgekeerde richting ook werkt, dit heet **contextual typing**. Zie hiervoor <https://www.typescriptlang.org/docs/handbook/type-inference.html#contextual-typing>"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Je kan ook gedetailleerde types maken voor bijvoorbeeld objecten. Dit kan door gebruik te maken van de `{}` operator. Je kan ook een **type alias** maken door gebruik te maken van het `type` keyword."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const obj1: { a: number, b: string } = { a: 1, b: \"hello\" };\n\n// of\ntype MyObject = { a: number, b: string };\nconst obj2: MyObject = { a: 1, b: \"hello\" };"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Er zijn ook programmeurs die meer houden van een OO-aanpak. Daarvoor voorziet TypeScript ook een aantal keywords\n\n* `class`: om een klasse te maken\n* `interface`: om een interface te maken\n* `enum`: om een enum te maken"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "enum Kleur { Rood, Groen, Blauw };\n\ninterface Kaart {\n  naam: string;\n  kleur: Kleur;\n}\n\nclass Persoon {\n  naam: string;\n\n  constructor(naam: string) {\n    this.naam = naam;\n  }\n}\n\n// of korter:\nclass Persoon2 {\n  constructor(public naam: string) {\n  }\n}"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Je kan hier dus ook keywords als `extends` en `implements` gebruiken om respectievelijk te erven van een klasse of een interface te implementeren.\n\nOm types te combineren moet je gebruik maken van de `&` operator, dit heet **intersection types**. De types worden hierbij samengevoegd tot één type."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type MyObjectExtension = MyObject & { c: number };\nconst obj3: MyObjectExtension = { a: 1, b: \"hello\", c: 3 };"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "\nJe kan ook types combineren met de `|` operator, dit heet **union types**. De types worden hierbij niet samengevoegd, het is ofwel het ene ofwel het andere type ofwel een combinatie van beide."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type MyObjectUnion = MyObject | { d: number };\nconst obj4: MyObjectUnion = { a: 1, b: \"hello\" };\nconst obj5: MyObjectUnion = { d: 3 };\n\n// maar ook\nconst obj6: MyObjectUnion = { a: 1, b: \"hello\", d: 3 };"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Utility types\n\nTypeScript heeft ook heel wat [utility types](https://www.typescriptlang.org/docs/handbook/utility-types.html). Dit zijn types die je kan gebruiken om andere types te maken. De meest gebruikte utility types zijn:\n\n* `Partial<Type>`: maakt een type optioneel\n* `Omit<Type, Keys>`: verwijdert een of meerdere properties van een type\n* `Record<Keys, Types>`: maakt een type voor een object met properties met naam volgens `Keys` en type volgens `Types`"
+            ],
+            "outputs": []
+        }
+    ]
+}
