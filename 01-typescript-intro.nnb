@@ -3,14 +3,14 @@
         {
             "language": "markdown",
             "source": [
-                "# TypeScript\n\nTypeScript is basically JavaScript met types. Het is een superset van JavaScript, wat betekent dat alle JavaScript code ook TypeScript code is. Omgekeerd is dit niet het geval! TypeScript is een programmeertaal die wordt omgezet (niet gecompileerd) naar JavaScript.\n\nOnderstaande functie is dus perfect geldige TypeScript code:\n\n```typescript\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nMet types wordt dit:\n\n```typescript\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n```"
+                "# TypeScript\n\nTypeScript is basically JavaScript met types. Het is een superset van JavaScript, wat betekent dat alle JavaScript code ook TypeScript code is. Omgekeerd is dit niet het geval! TypeScript is een programmeertaal die wordt omgezet (niet gecompileerd) naar JavaScript.\n\nOnderstaande functie is dus perfect geldige TypeScript code:\n\n```typescript\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nTypes geef je aan door na de naam van de variabele een dubbele punt te zetten, gevolgd door de naam van het type. Hetzelfde geldt voor het type van de returnwaarde van een functie.\n\nMet types wordt dit dus:\n\n```typescript\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n```"
             ],
             "outputs": []
         },
         {
             "language": "markdown",
             "source": [
-                "## Types\n\nTypeScript kent een aantal basistypes:\n\n* `number`\n* `string`\n* `boolean`\n* `null`\n* `undefined`\n* ...\n\nMet enkel speciale:\n\n* `void`: geeft niets terug (`null` of `undefined` zijn wel weer mogelijk)\n* `any`: eender welke waarde\n* `never`: geeft nooit iets terug\n  * bij `void` kan je nog `return;` doen, bij `never` niet\n  * je ziet dat onderstaand voorbeeld een syntaxfout geeft\n"
+                "## Types\n\nTypeScript kent een aantal basistypes:\n\n* `number`\n* `string`\n* `boolean`\n* `null`\n* `undefined`\n* ...\n\nMet enkel speciale:\n\n* `void`: geeft niets terug (`null` of `undefined` zijn dan wel weer mogelijk)\n* `any`: eender welke waarde, van eender welk type (niet aanbevolen)\n* `never`: geeft nooit iets terug\n  * bij `void` kan je nog `return;` doen, bij `never` niet\n  * je ziet dat onderstaand voorbeeld een syntaxfout geeft\n"
             ],
             "outputs": []
         },
@@ -149,7 +149,7 @@
         {
             "language": "markdown",
             "source": [
-                "Je kan ook gedetailleerde types maken voor bijvoorbeeld objecten. Dit kan door gebruik te maken van de `{}` operator. Je kan ook een **type alias** maken door gebruik te maken van het `type` keyword."
+                "Je kan ook gedetailleerde types maken voor bijvoorbeeld objecten. Dit kan door gebruik te maken van de `{}` operator. Je kan hiervoor ook een **type alias** maken door gebruik te maken van het `type` keyword."
             ],
             "outputs": []
         },
@@ -177,56 +177,14 @@
         {
             "language": "markdown",
             "source": [
-                "Je kan hier dus ook keywords als `extends` en `implements` gebruiken om respectievelijk te erven van een klasse of een interface te implementeren.\n\nOm types te combineren moet je gebruik maken van de `&` operator, dit heet **intersection types**. De types worden hierbij samengevoegd tot één type."
-            ],
-            "outputs": []
-        },
-        {
-            "language": "typescript",
-            "source": [
-                "type MyObjectExtension = MyObject & { c: number };\nconst obj3: MyObjectExtension = { a: 1, b: \"hello\", c: 3 };"
+                "Je kan hier dus ook keywords als `extends` en `implements` gebruiken om respectievelijk te erven van een klasse/interface of een interface te implementeren.\n\nJe kan aan de constructor van een klasse `private`, `public`, `protected` argumenten meegeven. Dit is syntactic sugar voor het aanmaken van properties met dezelfde naam en het toekennen van de argumenten aan de properties (zie `Persoon2`)."
             ],
             "outputs": []
         },
         {
             "language": "markdown",
             "source": [
-                "\nJe kan ook types combineren met de `|` operator, dit heet **union types**. De types worden hierbij niet samengevoegd, het is ofwel het ene ofwel het andere type, ofwel een combinatie van beide."
-            ],
-            "outputs": []
-        },
-        {
-            "language": "typescript",
-            "source": [
-                "type MyObjectUnion = MyObject | { d: number };\n\n// het ene of het andere\nconst obj4: MyObjectUnion = { a: 1, b: \"hello\" };\nconst obj5: MyObjectUnion = { d: 3 };\n\n// maar ook beide\nconst obj6: MyObjectUnion = { a: 1, b: \"hello\", d: 3 };"
-            ],
-            "outputs": []
-        },
-        {
-            "language": "markdown",
-            "source": [
-                "## Utility types\n\nTypeScript heeft ook heel wat [utility types](https://www.typescriptlang.org/docs/handbook/utility-types.html). Dit zijn types die je kan gebruiken om andere types te maken. De meest gebruikte utility types zijn:\n\n* `Partial<Type>`: maakt een type optioneel\n* `Omit<Type, Keys>`: verwijdert een of meerdere properties van een type\n* `Record<Keys, Types>`: maakt een type voor een object met properties met naam volgens `Keys` en type volgens `Types`\n* `Pick<Type, Keys>`: haalt een of meerdere properties (`Keys`) op uit een type (`Type`)\n* ..."
-            ],
-            "outputs": []
-        },
-        {
-            "language": "typescript",
-            "source": [
-                "type MyExample = {\n    a: number;\n    b: string;\n};\n\ntype WithoutB = Omit<MyExample, 'b'>;\ntype OptionalMyExample = Partial<MyExample>;\n\ntype PersonKeys = 'firstName' | 'lastName' | 'email';\ntype Person = Record<PersonKeys, string>;\n// is gelijk aan:\n// type Person = {\n//     firstName: string;\n//     lastName: string;\n//     email: string;\n// };\n\ntype OnlyEmail = Pick<Person, 'email'>;\ntype FullName = Pick<Person, 'firstName' | 'lastName'>;"
-            ],
-            "outputs": []
-        },
-        {
-            "language": "markdown",
-            "source": [
-                "## TS config\n\nOm een nieuw TypeScript project te maken, doe je volgende stappen:\n\n1. Maak een nieuwe map aan\n2. Maak een NodeJS project aan met `yarn init`\n3. Voeg TypeScript toe met `yarn add typescript`\n4. Maak een standaard TypeScript config aan met `yarn tsc --init`, dit maakt een `tsconfig.json` bestand aan\n\nEen aantal interessante opties in de `tsconfig.json`:\n\n* `compilerOptions`: de opties van de TS compiler (eigenlijk fout woord want het is geen compiler maar een transpiler)\n* `compilerOptions.target`: de JavaScript-versie waarnaar je wil compileren\n* `compilerOptions.module`: het soort module de compiler zal genereren\n* `compilerOptions.allowJs`: of je JavaScript mag gebruiken in je TypeScript project, handig om te migreren van JS naar TS\n* `compilerOptions.lib`: voeg extra libraries toe aan de standaard ES-libraries\n* `compilerOptions.outDir`: de output directory (waar de JS code terecht komt)\n* `compilerOptions.rootDir`: de root directory (waar de TS code staat), een gelijkaardige structuur zal ook in de `outDir` staan\n\nTypeScript bevat ook heel wat [handige opties](https://www.typescriptlang.org/tsconfig) om de code te controleren op stijl, fouten, ... Echter is het aangeraden om hiervoor een linter, zoals [ESLint](https://eslint.org/), te gebruiken.\n"
-            ],
-            "outputs": []
-        },
-        {
-            "language": "markdown",
-            "source": [
-                ""
+                "## TS config\n\nOm een nieuw TypeScript project te maken, doe je volgende stappen:\n\n1. Maak een nieuwe map aan\n2. Maak een NodeJS project aan met `yarn init`\n3. Voeg TypeScript toe met `yarn add typescript`\n4. Maak een standaard TypeScript config aan met `yarn tsc --init`, dit maakt een `tsconfig.json` bestand aan\n\nEen aantal interessante opties in de `tsconfig.json`:\n\n* `compilerOptions`: de opties van de TS compiler (eigenlijk fout woord want het is geen compiler maar een transpiler)\n* `compilerOptions.target`: de JavaScript-versie waarnaar je wil compileren\n* `compilerOptions.module`: het soort module de compiler zal genereren\n* `compilerOptions.allowJs`: of je JavaScript mag gebruiken in je TypeScript project, handig om te migreren van JS naar TS\n* `compilerOptions.lib`: voeg extra libraries toe aan de standaard ES-libraries\n* `compilerOptions.outDir`: de output directory (waar de JS code terecht komt)\n* `compilerOptions.rootDir`: de root directory (waar de TS code staat), een gelijkaardige structuur zal ook in de `outDir` staan\n\nTypeScript bevat ook heel wat [handige opties](https://www.typescriptlang.org/tsconfig) om de code te controleren op stijl, fouten, ... Echter is het aangeraden om hiervoor een linter, zoals [ESLint](https://eslint.org/), te gebruiken. Hierbij moet wel opgemerkt worden dat ESLint niets kan doen tijdens het compileren, het is enkel een linter die je manueel kan uitvoeren. Eventueel kan je ESLint integreren in een CI/CD pipeline die de code controleert vooraleer deze gecompileerd wordt.\n"
             ],
             "outputs": []
         }

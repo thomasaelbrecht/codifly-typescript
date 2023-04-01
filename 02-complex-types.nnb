@@ -1,0 +1,46 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# Complex types\n\nUiteraard zijn er meer dan alleen de basis types die we in de vorige notebook hebben gezien. In deze notebook gaan we kijken naar de complexere types die TypeScript kent.\n\n## Intersection types\n\nOm types te combineren moet je gebruik maken van de `&` operator, dit heet **intersection types**. De types worden hierbij samengevoegd tot één type. Het is hierbij verplicht dat variabelen van dit type aan alle types voldoen, m.a.w. het moet alle properties uit de types bevatten."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type Book = {\n    title: string;\n    author: string;\n};\n\ntype BookExtension = Book & { isbn: string; };\nconst book: BookExtension = {\n    title: 'Introducing MLOps',\n    author: 'Mark Treveil & the Dataiku Team',\n    isbn: '9781492083290'\n};"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Union types\n\nJe kan ook types combineren met de `|` operator, dit heet **union types**. De types worden hierbij niet samengevoegd, het is ofwel het ene ofwel het andere type, ofwel een combinatie van beide. Het is dus niet verplicht om aan alle types te voldoen.\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type Member = {\n    name: string;\n    age: number;\n};\n\ntype Email = {\n    email: string;\n};\n\ntype MemberExtension = Member | Email;\n\nconst member: MemberExtension = {\n    name: 'Thomas Aelbrecht',\n    age: 25\n};\nconst member2: MemberExtension = {\n    name: 'Thomas Aelbrecht',\n    age: 25,\n    email: 'thomas.aelbrecht@hogent.be',\n};\nconst member3: MemberExtension = {\n    email: 'thomas.aelbrecht@hogent.be',\n};"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Utility types\n\nTypeScript heeft ook heel wat [utility types](https://www.typescriptlang.org/docs/handbook/utility-types.html). Dit zijn types die je kan gebruiken om andere types te maken. De meest gebruikte utility types zijn:\n\n* `Partial<Type>`: maakt een type optioneel\n* `Omit<Type, Keys>`: verwijdert een of meerdere properties van een type\n* `Record<Keys, Types>`: maakt een type voor een object met properties met naam volgens `Keys` en type volgens `Types`\n* `Pick<Type, Keys>`: haalt een of meerdere properties (`Keys`) op uit een type (`Type`)\n* ..."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type MyExample = {\n    a: number;\n    b: string;\n};\n\ntype WithoutB = Omit<MyExample, 'b'>;\ntype OptionalMyExample = Partial<MyExample>;\n\ntype PersonKeys = 'firstName' | 'lastName' | 'email';\ntype Person = Record<PersonKeys, string>;\n// is gelijk aan:\n// type Person = {\n//     firstName: string;\n//     lastName: string;\n//     email: string;\n// };\n\ntype OnlyEmail = Pick<Person, 'email'>;\ntype FullName = Pick<Person, 'firstName' | 'lastName'>;"
+            ],
+            "outputs": []
+        }
+    ]
+}
