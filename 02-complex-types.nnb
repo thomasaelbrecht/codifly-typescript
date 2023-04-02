@@ -31,6 +31,27 @@
         {
             "language": "markdown",
             "source": [
+                "Zet je de union operator helemaal vooraan het type, dan moet het één van de types zijn, maar niet alle types. Dit heet **discriminated unions**."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type NetworkLoadingState = {\n    state: \"loading\";\n};\ntype NetworkFailedState = {\n    state: \"failed\";\n    code: number;\n};\ntype NetworkSuccessState = {\n    state: \"success\";\n    response: {\n        title: string;\n        duration: number;\n        summary: string;\n    };\n};\n// Een van de drie, niet allemaal\ntype NetworkState =\n    | NetworkLoadingState\n    | NetworkFailedState\n    | NetworkSuccessState;"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "In dit voorbeeld is het property `state` gedeeld. TypeScript kan dit property gebruiken om type inference te doen om te bepalen welk type gebruikt wordt. Zo krijg je in bv. if-structuren de juiste code completion en type checking."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
                 "## Utility types\n\nTypeScript heeft ook heel wat [utility types](https://www.typescriptlang.org/docs/handbook/utility-types.html). Dit zijn types die je kan gebruiken om andere types te maken. De meest gebruikte utility types zijn:\n\n* `Partial<Type>`: maakt een type optioneel\n* `Omit<Type, Keys>`: verwijdert een of meerdere properties van een type\n* `Record<Keys, Types>`: maakt een type voor een object met properties met naam volgens `Keys` en type volgens `Types`\n* `Pick<Type, Keys>`: haalt een of meerdere properties (`Keys`) op uit een type (`Type`)\n* ..."
             ],
             "outputs": []
@@ -39,6 +60,69 @@
             "language": "typescript",
             "source": [
                 "type MyExample = {\n    a: number;\n    b: string;\n};\n\ntype WithoutB = Omit<MyExample, 'b'>;\ntype OptionalMyExample = Partial<MyExample>;\n\ntype PersonKeys = 'firstName' | 'lastName' | 'email';\ntype Person = Record<PersonKeys, string>;\n// is gelijk aan:\n// type Person = {\n//     firstName: string;\n//     lastName: string;\n//     email: string;\n// };\n\ntype OnlyEmail = Pick<Person, 'email'>;\ntype FullName = Pick<Person, 'firstName' | 'lastName'>;"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Type manipulation\n\nTypeScript biedt ook manieren om als het ware types te creëren op basis van andere types, m.a.w. we manipuleren types. Voorbeelden zijn:\n\n- keyof\n- typeof\n- conditional types\n- ...\n\nEr is veel meer te vinden in de docs: <https://www.typescriptlang.org/docs/handbook/2/types-from-types.html>.\n\n### keyof\n\nDe `keyof` type operator neemt een object type als parameter en geeft een `string` of `number` type terug. Dit type bevat alle keys van het object type.\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type Point = { x: number; y: number };\ntype P = keyof Point; // \"x\" | \"y\"\n\ntype Arrayish = { [n: number]: unknown };\ntype A = keyof Arrayish; // number\n\ntype Mapish = { [k: string]: boolean };\ntype M = keyof Mapish; // string | number\n\n// "
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Als `keyof` gebruikt wordt op een type met `string` als index key, dan is het return type `string | number`. Dit komt omdat JS automatisch `number` keys omzet naar `string` keys. `obj[0]` is dus gelijk aan `obj[\"0\"]`.\n\n### typeof\n\nJavaScript heeft al een `typeof` operator die je kan gebruiken bij *expressies*. Simpel gezegd: aan de rechterkant van de `=`. Deze operator geeft het type van de expressie terug. TypeScript heeft ook een `typeof` operator, maar deze werkt op *types*.\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const s = \"Codifly\";\nlet n: typeof s; // string"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "`typeof` heeft weinig nut bij simpele types, het wordt heel handig bij complexe types. Bijvoorbeeld bij het maken van een type voor een functie. Je kan dan de return type van de functie opvragen met `typeof`."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type Add = (a: number, b: number) => number;\ntype Antwoord = ReturnType<Add>; // number\n\nfunction add(a: number, b: number): number {\n    return a + b;\n}\n// werkt niet want add is een value, geen type\n// type AnderAntwoord = ReturnType<add>;\ntype AnderAntwoord = ReturnType<typeof add>; // number"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### conditional types\n\nConditional types zijn types met een if-structuur waarbij we de syntax van de ternaire operator gebruiken: `voorwaarde ? doe dit indien true : doe dit indien false`.\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type Shape = {\n    area(): number;\n};\n\ntype Circle = Shape & {\n    getRadius(): number;\n};\n\ntype Example1 = Circle extends Shape ? string : number; // string\n\ntype Example2 = RegExp extends Circle ? string : number; // number\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Lees verder op <https://www.typescriptlang.org/docs/handbook/2/conditional-types.html> vanaf de `createLabel` functie."
             ],
             "outputs": []
         }
