@@ -125,6 +125,105 @@
                 "Lees verder op <https://www.typescriptlang.org/docs/handbook/2/conditional-types.html> vanaf de `createLabel` functie."
             ],
             "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### satisfies operator\n\nDe `satisfies` operator is een nieuwe feature in TypeScript 4.9. Het is een operator die je kan gebruiken om te checken of een type voldoet aan een ander type. Het is een soort van `instanceof` operator, maar dan voor types. Het laat toe om via type inference het meest specifieke type te gebruiken terwijl je toch controleert of het type voldoet aan een bepaald (ander) type.\n\n> Bekijk het voorbeeld op <https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator>"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "### infer operator\n\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "De `infer` operator kan je binnen conditional types gebruiken om het type af te leiden om te gebruiken in de `true` of `false` kant van de conditional type. Op die manier hoef je geen indexed access te gebruiken om het type te achterhalen.\n\nKijk naar onderstaand voorbeeld:"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type Flatten<Type> = Type extends Array<infer Item> ? Item : Type;"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Dit type kan gebruikt worden om eender welk type om te vormen naar iets zonder array. Een `string` blijft dus een `string`, een `number[]` wordt `number`.\n\nJe zou ook een type kunnen schrijven om de returnwaarde van een functie te achterhalen. Dit is echter niet nodig, want TypeScript heeft hiervoor reeds een type: `ReturnType`. Toch een voorbeeld:"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type GetReturnType<Type> = Type extends (...args: never[]) => infer Return\n  ? Return\n  : never;\n \ntype Num = GetReturnType<() => number>;\n// type Num = number\n\ntype Str = GetReturnType<(x: string) => string>;\n// type Str = string\n\ntype Bools = GetReturnType<(a: boolean, b: boolean) => boolean[]>;\n// type Bools = boolean[]"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## InterfaceSelection\n\nNu weten we net genoeg om het `InterfaceSelection` type te begrijpen. Het idee van dit type is een geneste pick:\n\n```typescript\nInterfaceSelection<TsType, { fieldWeWantToPickFromType: void, anotherFieldFromType: { nestedField1: { nestedField2: void } } }>\n```\n\nWe willen dus eigenlijk een type met naam `InterfaceSelection` met als argumenten:\n\n- een TypeScript type (de bron waaruit we picken),\n- iets wat beschrijft hoe en wat we willen picken (het patroon).\n\nWe definiëren eerst het patroon:"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// T = waaruit gepicked wordt\ntype InterfaceSelectionPattern<T> =\n    // ofwel void = geval waar we stoppen met picken/recursie\n    | void\n    // ofwel een object met de keys van T en als value een InterfaceSelectionPattern\n    | (\n        // zijn we een array?\n        [T & {}] extends [(infer E)[]]\n            // dan simpel een recursief patroon\n            ? InterfaceSelectionPattern<E>\n            // anders moeten we de keys van T picken met een recursief patroon\n            : {\n                [K in keyof (T & {})]?: InterfaceSelectionPattern<(T & {})[K]>;\n            }\n    );"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Nu we het patroon hebben, kunnen we de geneste picker maken."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// T = waaruit gepicked wordt\n// P = het patroon waarmee we picken, vanaar de extends\ntype InterfaceSelection<T, P extends InterfaceSelectionPattern<T>> =\n    // als P void is, dan is het resultaat T - we stoppen met picken\n    [P,] extends [void]\n        ? T\n        // anders exact één van de volgende:\n            // als T null is, dan null - anders ga verder\n        :   | (null extends T ? null : never)\n            // als T undefined is, dan undefined - anders ga verder\n            | (undefined extends T ? undefined : never)\n            // anders:\n            | (\n                // zijn we een array?\n                [T & {}] extends [(infer E)[]]\n                    // dan simpel een recursief patroon op het type van de elementen in de array (= E)\n                    ? InterfaceSelection<E, P & InterfaceSelectionPattern<E>>[]\n                    // anders een recursief patroon op de keys van het object T\n                    // de & {} is nodig aangezien we niet zeker zijn of T nog een object is\n                    : {\n                        [K in keyof ((T | P) & {})]: InterfaceSelection<\n                            (T & {})[K],\n                            (P & {})[K] & InterfaceSelectionPattern<(T & {})[K]>\n                        >;\n                    }\n            );"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "En dit kan als volgt gebruikt worden:"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "type Animal = {\n    name: string;\n    age: number;\n};\n\ntype Zoo = {\n    animals: Animal[];\n    zookeeper: {\n        firstName: string;\n        lastName: string;\n        phone: string;\n    };\n};\n\nconst zoo: Zoo = {\n    animals: [\n        {\n            name: 'Zebra',\n            age: 5,\n        },\n        {\n            name: 'Giraffe',\n            age: 10,\n        },\n    ],\n    zookeeper: {\n        firstName: 'John',\n        lastName: 'Doe',\n        phone: '123-456-7890',\n    }\n};\n\ntype ZooKeeper = InterfaceSelection<Zoo, { zookeeper: void }>;\n\nconst zooKeeper: ZooKeeper = {\n    zookeeper: zoo.zookeeper,\n};\nconsole.log(zooKeeper);\n\ntype AnimalNames = InterfaceSelection<Zoo, { animals: { name: void } }>;\n\nconst animalNames: AnimalNames = {\n    animals: zoo.animals.map((animal) => ({ name: animal.name })),\n};\nconsole.log(animalNames);\n\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{",
+                                "  zookeeper: { firstName: 'John', lastName: 'Doe', phone: '123-456-7890' }",
+                                "}",
+                                "{ animals: [ { name: 'Zebra' }, { name: 'Giraffe' } ] }",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
