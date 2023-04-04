@@ -1,0 +1,11 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# TypeScript in React\n\nVoor TypeScript en React lees je best eens door <https://react-typescript-cheatsheet.netlify.app>.\n\nEen project maak je best gebruik makend van een template:\n\n```bash\nyarn create react-app my-app --template typescript\n```\n\nof nog beter:\n\n```bash\nyarn create vite my-vue-app --template react-ts\n```\n\nEen paar nuttige links:\n\n- <https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example>: veel gebruikte types voor o.a. `children`, `type` of `interface` voor props...\n- <https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/function_components>: gebruik geen `React.FC` meer\n- <https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/forms_and_events>: formulieren en event types\n- <https://react-typescript-cheatsheet.netlify.app/docs/basic/troubleshooting/non_ts_files>: importeren van niet-TS bestanden zoals afbeeldingen\n- <https://react-typescript-cheatsheet.netlify.app/docs/basic/troubleshooting/tsconfig>: ook de `tsconfig.json` moet licht aangepast worden\n- <https://github.com/typescript-cheatsheets/utilities>: links naar nuttige packages met eigen utility types voor TS\n- <https://react-typescript-cheatsheet.netlify.app/docs/advanced/patterns_by_usecase/#wrappingmirroring>: wrap een HTML element, bv. schrijf een eigen `Button` component die een `button` element wrapt en de props van `button` ontvangt\n- <https://react-typescript-cheatsheet.netlify.app/docs/migration/from_js>: migreren van JS naar TS (kan ook voor andere frameworks/projecten)\n\nEr staan ook wat nuttige links om TS te leren in de cheatsheet: <https://react-typescript-cheatsheet.netlify.app/docs/basic/troubleshooting/learn_ts>.\n\n> Maar denk vooral eens na over wat React in hun nieuwe docs schreef: <https://react.dev> (bij het deel *Go full-stack with a framework*).\n"
+            ],
+            "outputs": []
+        }
+    ]
+}
