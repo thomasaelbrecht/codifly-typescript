@@ -3,7 +3,7 @@
         {
             "language": "markdown",
             "source": [
-                "# Complex types\n\nUiteraard zijn er meer dan alleen de basis types die we in de vorige notebook hebben gezien. In deze notebook gaan we kijken naar de complexere types die TypeScript kent.\n\n## Intersection types\n\nOm types te combineren moet je gebruik maken van de `&` operator, dit heet **intersection types**. De types worden hierbij samengevoegd tot één type. Het is hierbij verplicht dat variabelen van dit type aan alle types voldoen, m.a.w. het moet alle properties uit de types bevatten."
+                "# Complex types\n\nUiteraard zijn er meer dan alleen de basis types die we in de vorige notebook hebben gezien. In deze notebook gaan we kijken naar de complexere types die TypeScript kent.\n\n> Onderstaande operators kunnen vaak werken met interfaces als argument, maar ze returnen nadien een type.\n\n## Intersection types\n\nOm types te combineren moet je gebruik maken van de `&` operator, dit heet **intersection types**. De types worden hierbij samengevoegd tot één type. Het is hierbij verplicht dat variabelen van dit type aan alle types voldoen, m.a.w. het moet alle properties uit de types bevatten."
             ],
             "outputs": []
         },
@@ -208,22 +208,7 @@
             "source": [
                 "type Animal = {\n    name: string;\n    age: number;\n};\n\ntype Zoo = {\n    animals: Animal[];\n    zookeeper: {\n        firstName: string;\n        lastName: string;\n        phone: string;\n    };\n};\n\nconst zoo: Zoo = {\n    animals: [\n        {\n            name: 'Zebra',\n            age: 5,\n        },\n        {\n            name: 'Giraffe',\n            age: 10,\n        },\n    ],\n    zookeeper: {\n        firstName: 'John',\n        lastName: 'Doe',\n        phone: '123-456-7890',\n    }\n};\n\ntype ZooKeeper = InterfaceSelection<Zoo, { zookeeper: void }>;\n\nconst zooKeeper: ZooKeeper = {\n    zookeeper: zoo.zookeeper,\n};\nconsole.log(zooKeeper);\n\ntype AnimalNames = InterfaceSelection<Zoo, { animals: { name: void } }>;\n\nconst animalNames: AnimalNames = {\n    animals: zoo.animals.map((animal) => ({ name: animal.name })),\n};\nconsole.log(animalNames);\n\n"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "{",
-                                "  zookeeper: { firstName: 'John', lastName: 'Doe', phone: '123-456-7890' }",
-                                "}",
-                                "{ animals: [ { name: 'Zebra' }, { name: 'Giraffe' } ] }",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
         }
     ]
 }

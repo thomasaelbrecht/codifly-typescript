@@ -12,103 +12,14 @@
             "source": [
                 "yarn add zod"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "yarn add v1.22.18",
-                                ""
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stderr",
-                            "value": [
-                                "warning package.json: No license field",
-                                "warning No license field",
-                                ""
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "[1/4] Resolving packages...",
-                                "[2/4] Fetching packages...",
-                                "[3/4] Linking dependencies...",
-                                "[4/4] Building fresh packages...",
-                                ""
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stderr",
-                            "value": [
-                                "warning No license field",
-                                ""
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "success Saved 1 new dependency.",
-                                "info Direct dependencies",
-                                "└─ zod@3.21.4",
-                                "info All dependencies",
-                                "└─ zod@3.21.4",
-                                "Done in 0.63s.",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
         },
         {
             "language": "typescript",
             "source": [
                 "import { z } from \"zod\";\n\n// Definieer het schema\nconst myNumber = z.number().min(0).max(1000);\nconst myString = z.string().length(5);\n\n// Gebruik het schema om input te valideren\nconst myNumberResult = myNumber.parse(123);\nconsole.log(myNumberResult); // 123\n\nconst myStringResult = myString.parse(\"hello\");\nconsole.log(myStringResult); // \"hello\"\n\n// parse gooit een error als de input niet voldoet aan het schema\n// (haal de commentaar weg om de andere error te zien)\ntry {\n    myNumber.parse(-1); // ZodError: Number must be greater than or equal to 0\n    // myString.parse(\"hello world\"); // ZodError: String must contain exactly 5 character(s)\n} catch (error) {\n    console.log(error.name, JSON.stringify(error.issues, null, 2));\n}"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "123",
-                                "hello",
-                                "ZodError [",
-                                "  {",
-                                "    \"code\": \"too_small\",",
-                                "    \"minimum\": 0,",
-                                "    \"type\": \"number\",",
-                                "    \"inclusive\": true,",
-                                "    \"exact\": false,",
-                                "    \"message\": \"Number must be greater than or equal to 0\",",
-                                "    \"path\": []",
-                                "  }",
-                                "]",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
         },
         {
             "language": "markdown",
@@ -122,44 +33,12 @@
             "source": [
                 "import { z } from \"zod\";\n\nconst myDate = z.date().min(new Date(\"2023-01-01\"));\nconst myDateResult = myDate.safeParse(new Date(\"2021-01-01\"));\nconsole.log(JSON.stringify(myDateResult, null, 2)); // { success: false, error: ZodError }\n\n// ofwel zonder te moeten wrappen in new Date()\nconst myDate2 = z.coerce.date().min(new Date(\"2023-01-01\"));\nconst myDateResult2 = myDate2.safeParse(\"2024-01-01\");\nconsole.log(JSON.stringify(myDateResult2, null, 2)); // { success: false, error: ZodError }"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "{",
-                                "  \"success\": false,",
-                                "  \"error\": {",
-                                "    \"issues\": [",
-                                "      {",
-                                "        \"code\": \"too_small\",",
-                                "        \"message\": \"Date must be greater than or equal to Sun Jan 01 2023 01:00:00 GMT+0100 (Central European Standard Time)\",",
-                                "        \"inclusive\": true,",
-                                "        \"exact\": false,",
-                                "        \"minimum\": 1672531200000,",
-                                "        \"type\": \"date\",",
-                                "        \"path\": []",
-                                "      }",
-                                "    ],",
-                                "    \"name\": \"ZodError\"",
-                                "  }",
-                                "}",
-                                "{",
-                                "  \"success\": true,",
-                                "  \"data\": \"2024-01-01T00:00:00.000Z\"",
-                                "}",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
         },
         {
             "language": "markdown",
             "source": [
-                "## Werking\n\nAllemaal leuk, maar hoe werkt het nu?\n\nEr komt natuurlijk heel wat code bij kijken, maar basically bouwen ze een boomstructuur van ZodTypes op. Voor de boomstructuur doen ze zelf niets speciaal, ze gebruiken simpel wat TypeScript al aanbiedt, zoals bv. objecten, allerlei operators voor types, etc.\n\nAlles in `zod` erft over van `ZodType` (ja, het is OO). Elk `ZodType` heeft een attribuut `_output` waarin het TypeScript type zit zodat je dit met `z.infer` kan ophalen, zie:\n\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L50>\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L53>\n\nDe reden waarom je `z.infer<typeof Iets>` moet doen, is omdat het `_ouput` attribuut van de klasse `ZodType` simpelweg gebruikt wordt om het type bij te houden, er zal nooit een waarde in zitten. De `typeof` returned exact hetgene wat we willen: het type van `Iets` en dus ook van `_output`. Geen magie dus, alleen out-of-the-box denken...\n\nVoor objecten wordt het type bepalen natuurlijk heel wat complexer. Daarvoor gebruiken ze eigen geschreven TS utils die types omvormen (net zoals de `InterfaceSelection` maar dan nog complexer), zie:\n\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L2136>\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L2219>\n"
+                "## Werking\n\nAllemaal leuk, maar hoe werkt het nu?\n\nEr komt natuurlijk heel wat code bij kijken, maar basically bouwen ze een boomstructuur van ZodTypes op en doen ze vervolgens *TypeScript magic*. Voor de boomstructuur doen ze zelf niets speciaal, ze gebruiken simpel wat TypeScript al aanbiedt, zoals bv. objecten. Voor de *TypeScript magic* maken ze gebruik van allerlei operators voor types..., dus ook niets speciaals.\n\nAlles in `zod` erft over van `ZodType` (ja, het is OO). Elk `ZodType` heeft een attribuut `_output` waarin het TypeScript type zit zodat je dit met `z.infer` kan ophalen, zie:\n\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L50>\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L53>\n\nDe reden waarom je `typeof` nodig hebt bij `z.infer<typeof Iets>`, is omdat het `_ouput` attribuut van de klasse `ZodType` simpelweg gebruikt wordt om het type bij te houden, er zal nooit een waarde in zitten. De `typeof` returned exact hetgene wat we willen: het type van `Iets` en dus ook van `_output`. Geen magie dus, alleen out-of-the-box denken...\n\nVoor objecten wordt het type bepalen natuurlijk heel wat complexer. Daarvoor gebruiken ze eigen geschreven TS utils die types omvormen (net zoals de `InterfaceSelection` maar dan nog complexer), zie:\n\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L2136>\n- <https://github.com/colinhacks/zod/blob/51e14beeab2f469fcbf18e3df44653e1643f5487/src/types.ts#L2219>\n"
             ],
             "outputs": []
         }

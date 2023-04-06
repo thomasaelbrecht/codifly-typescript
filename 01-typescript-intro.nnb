@@ -17,14 +17,14 @@
         {
             "language": "typescript",
             "source": [
-                "function test(): never {\n  return;\n}"
+                "function testVreemd(): void {\n    return;\n}\n\nfunction test(): never {\n  return;\n}"
             ],
             "outputs": []
         },
         {
             "language": "markdown",
             "source": [
-                "Er zijn ook enkele types voor de OO-mensen onder ons:\n\n* `class`\n* `interface`\n* `enum`\n* `type`"
+                "Er zijn ook enkele types voor de OO-mensen onder ons:\n\n* `class`\n* `interface`\n* `enum`\n* `type` (minst OO van allemaal)\n\n> `interface` en `type` zijn waarschijnlijk het meest nuttig voor Codifly\n> Hou rekening met wat wel/niet kan met beiden: <https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example#useful-table-for-types-vs-interfaces>\n>\n> Regel: gebruik een `interface` tot je een `type` nodig hebt (bron: [orta](https://twitter.com/orta/status/1356129195835973632?s=20))\n"
             ],
             "outputs": []
         },
@@ -38,27 +38,9 @@
         {
             "language": "typescript",
             "source": [
-                "let a = 1;\nlet b = \"hello\";\nlet c = true;\nlet d = null;\nlet e = undefined;\nlet f = [1, 2, 3];\nlet g = { a: 1, b: 2, c: 3 };\n\nconsole.log('Type of a:', typeof a);\nconsole.log('Type of b:', typeof b);\nconsole.log('Type of c:', typeof c);\nconsole.log('Type of d:', typeof d);\nconsole.log('Type of e:', typeof e);\nconsole.log('Type of f:', typeof f); // eigenlijk is dit number[]\nconsole.log('Type of g:', typeof g); // eigenlijk willen we hier ook een mooier type\n\n"
+                "let a = 1;\nlet b = \"hello\";\nlet c = true;\nlet d = null;\nlet e = undefined;\nlet f = [1, 2, 3];\nlet g = { a: 1, b: 2, c: 3 };\n\nconsole.log('Type of a:', typeof a);\nconsole.log('Type of b:', typeof b);\nconsole.log('Type of c:', typeof c);\nconsole.log('Type of d:', typeof d); // nja, null is niet echt een object\nconsole.log('Type of e:', typeof e);\nconsole.log('Type of f:', typeof f); // eigenlijk is dit number[]\nconsole.log('Type of g:', typeof g); // eigenlijk willen we hier ook een mooier type\n\n"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "Type of a: number",
-                                "Type of b: string",
-                                "Type of c: boolean",
-                                "Type of d: object",
-                                "Type of e: undefined",
-                                "Type of f: object",
-                                "Type of g: object",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
         },
         {
             "language": "markdown",
@@ -70,21 +52,9 @@
         {
             "language": "typescript",
             "source": [
-                "a = \"test\";\n\nconsole.log('Type of a:', typeof a);\n\n// Hier lukt het nu wel maar we krijgen wel een warning"
+                "a = \"test\";\n\nconsole.log('Type of a:', typeof a);\n\n// Hier lukt het nu wel maar we krijgen wel een warning, compiler settings kunnen hier een error van maken"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "Type of a: string",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
         },
         {
             "language": "markdown",
@@ -112,18 +82,7 @@
             "source": [
                 "let getalOfTekst: number | string = 1;\n\n// en dan later:\ngetalOfTekst = \"hello\";"
             ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "text/plain",
-                            "value": [
-                                "\u001b[32m'hello'\u001b[39m"
-                            ]
-                        }
-                    ]
-                }
-            ]
+            "outputs": []
         },
         {
             "language": "markdown",
@@ -156,7 +115,7 @@
         {
             "language": "typescript",
             "source": [
-                "const obj1: { a: number, b: string } = { a: 1, b: \"hello\" };\n\n// of\ntype MyObject = { a: number, b: string };\nconst obj2: MyObject = { a: 1, b: \"hello\" };"
+                "const obj1: { a: number, b: string } = { a: 1, b: \"hello\" };\n\n// of\ntype MyObject = { a: number, b: string }; // of een interface\nconst obj2: MyObject = { a: 1, b: \"hello\" };"
             ],
             "outputs": []
         },
