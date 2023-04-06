@@ -3,7 +3,7 @@
         {
             "language": "markdown",
             "source": [
-                "# TypeScript\n\nTypeScript is basically JavaScript met types. Het is een superset van JavaScript, wat betekent dat alle JavaScript code ook TypeScript code is. Omgekeerd is dit niet het geval! TypeScript is een programmeertaal die wordt omgezet (niet gecompileerd) naar JavaScript.\n\nOnderstaande functie is dus perfect geldige TypeScript code:\n\n```typescript\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nTypes geef je aan door na de naam van de variabele een dubbele punt te zetten, gevolgd door de naam van het type. Hetzelfde geldt voor het type van de returnwaarde van een functie.\n\nMet types wordt dit dus:\n\n```typescript\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n```"
+                "# TypeScript\n\nEens zien wat hoe ChatGPT TypeScript omschrijft:\n\n![](./img/typescript-chatgpt.png)\n\nTypeScript is basically JavaScript met types. Het is een superset van JavaScript, wat betekent dat alle JavaScript code ook TypeScript code is. Omgekeerd is dit niet het geval! TypeScript is een programmeertaal die wordt omgezet (niet gecompileerd) naar JavaScript.\n\nOnderstaande functie is dus perfect geldige TypeScript code:\n\n```typescript\nfunction add(a, b) {\n  return a + b;\n}\n```\n\nTypes geef je aan door na de naam van de variabele een dubbele punt te zetten, gevolgd door de naam van het type. Hetzelfde geldt voor het type van de returnwaarde van een functie.\n\nMet types wordt dit dus:\n\n```typescript\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n```"
             ],
             "outputs": []
         },
