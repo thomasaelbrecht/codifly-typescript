@@ -1,0 +1,46 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "# Vragen\n\n## Hoe maak je slechts enkele properties van een type optioneel?\n\nJe kan hiervoor gebruik maken van conditional types. Onderstaand type verwacht als eerste type argument een object, en als tweede een string union die beschrijft welke properties optioneel zijn."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// requires an object as type parameter and the optional keys of the object as a string union\ntype SomeOptional<T, O extends keyof T> = {\n  [K in keyof T]: K extends O ? T[K] | undefined : T[K];\n};\n\n// Voorbeeld\ntype Car = {\n  manufacturer: string;\n  model: string;\n  year: number;\n  price: string;\n};\n\ntype PriceAndYearOptional = SomeOptional<Car, 'price' | 'year'>;"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Hoe maak je een array van objecten (key-label pairs) met vooraf bepaalde keys?\n\nElk element in de array is van volgend type:\n\n```ts\ntype KeyLabelPair = {\n    key: string;\n    label: string;\n};\n```\n\nHierbij worden de keys van de objecten vooraf bepaald door een string union. Een extra vereiste is dat de keys van de objecten in de array uniek zijn. Als we een volgende string union gebruiken:\n\n```ts\ntype Keys = \"key1\" | \"key2\" | \"key3\";\n```\n\nDan moet de array exact drie objecten bevatten, één voor elke key.\n\nDit geeft ons volgend type:"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// gebruikt distributive conditional types\ntype InputElement<Keys extends string> = Keys extends string ? {\n    key: Keys;\n    value: string;\n} : never;\n\ntype InputElements<Keys extends string> = InputElement<Keys>[];\n\nconst list: InputElements<'name' | 'age'> = [\n    { key: 'name', value: 'John' },\n    { key: 'age', value: '42' },\n];\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "Maar dit type is niet correct, want het is mogelijk om een array te maken met slechts twee objecten, of zelfs met slechts één object. We willen dat de array exact het aantal objecten bevat dat overeenkomt met het aantal keys in de string union. Helaas is dit niet zo eenvoudig te realiseren met TypeScript, het is een CPU-intensieve berekening maar het kan wel:\n"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "\n// credits goes to https://stackoverflow.com/a/50375286\ntype UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (\n    k: infer I\n) => void\n    ? I\n    : never;\n\n// Converts union to overloaded function\ntype UnionToOvlds<U> = UnionToIntersection<\n    U extends any ? (f: U) => void : never\n>;\n\ntype PopUnion<U> = UnionToOvlds<U> extends (a: infer A) => void ? A : never;\n\ntype IsUnion<T> = [T] extends [UnionToIntersection<T>] ? false : true;\n\n// credits goes to https://catchts.com/union-array\n// verplicht wel dezelfde volgorde als de union\ntype UnionToArray<T, A extends unknown[] = []> = IsUnion<T> extends true\n    ? UnionToArray<Exclude<T, PopUnion<T>>, [{ key: PopUnion<T>; value: string; }, ...A]>\n    : [{ key: T; value: string; }, ...A];\n\ntype Elements = UnionToArray<'name' | 'age'>;\n"
+            ],
+            "outputs": []
+        }
+    ]
+}
